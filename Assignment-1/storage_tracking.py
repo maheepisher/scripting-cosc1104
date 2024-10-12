@@ -1,3 +1,17 @@
+"""
+File Name: storage_tracking.py
+
+Author: Maheep Isher Singh Chawla (100909435)
+
+Date: 11 oct'2024
+
+Description: This file contains code which takes user input users and required storage. various functions are performed like:
+             Create an Account, Delete Account, Upload File, Show Accounts
+
+
+"""
+
+
 track = {}
 
 
