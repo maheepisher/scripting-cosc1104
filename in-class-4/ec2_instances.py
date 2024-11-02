@@ -63,7 +63,12 @@ if __name__ == "__main__":
     max_memory = get_valid_integer("Enter the maximum allowed memory in GiB (optional): ", allow_none=True)
 
     # Load the JSON data
-    with open('E:\Cloud Computing\Scripting\Repositories\scripting-cosc1104\in-class-4\ec2_instance_types.json', 'r') as jsonfile:
+    
+    #absolute path
+    # with open('E:\Cloud Computing\Scripting\Repositories\scripting-cosc1104\in-class-4\ec2_instance_types.json', 'r') as jsonfile:
+    #     ec2_instances = json.load(jsonfile)
+        
+    with open('ec2_instance_types.json', 'r') as jsonfile:
         ec2_instances = json.load(jsonfile)
 
     # Filter the instances based on user input
