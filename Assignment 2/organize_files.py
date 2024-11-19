@@ -4,9 +4,10 @@ from datetime import datetime
 
 def get_files_in_directory(directory):
     """Retrieve a list of files in the specified directory (excluding subdirectories)."""
-    return [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+    return [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]  #Ref: https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory
 
 def sort_files(files, directory, sort_option):
+    #Ref: https://calebmcelrath.substack.com/p/simplify-file-organization-with-python
     """Sort files based on the selected option."""
     if sort_option == 1:
         return sorted(files)  # Sort by filename (alphabetically)
@@ -102,6 +103,6 @@ if __name__ == "__main__":
     while(True):
         main()
         try_again = input("Do you want to continue organizing files? (yes/no): ")
-        if try_again != "yes":
+        if try_again.lower() != "yes":
             break
     
