@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Groups and Streams</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            color: #343a40;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .content {
+            margin-top: 2rem;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-select {
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            margin-top: 1rem;
+        }
+
+        .alert {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">AWS Cloudwatch Logs</h1>
+        <div class="content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            
+            {% if not log_groups %}
+                <div class="alert alert-warning" role="alert">
+                    No log groups available. Please ensure your AWS environment has log groups configured.
+                </div>
+            {% else %}
+                <form action="/logs" method="POST">
+                    <div class="mb-3">
+                        <label for="logGroup" class="form-label">Select Log Group:</label>
+                        <select id="logGroup" name="logGroup" class="form-select" onchange="updateLogStreams()" required>
+                            <option value="" disabled selected>Choose a log group</option>
+                            {% for log_group in log_groups %}
+                                <option value="{{ log_group }}">{{ log_group }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="logStream" class="form-label">Select Log Stream:</label>
+                        <select id="logStream" name="logStream" class="form-select" required>
+                            <option value="" disabled selected>Choose a log stream</option>
+                        </select>
+                    </div>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                    <button type="submit" class="btn btn-primary">Download Log Events</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const logGroupDetails = {{ log_group_details|tojson }};
+
+        function updateLogStreams() {
+            const logGroupSelect = document.getElementById('logGroup');
+            const logStreamSelect = document.getElementById('logStream');
+            const selectedLogGroup = logGroupSelect.value;
+
+            logStreamSelect.innerHTML = ''; // Clear existing options
+
+            if (logGroupDetails[selectedLogGroup] && logGroupDetails[selectedLogGroup].length > 0) {
+                logGroupDetails[selectedLogGroup].forEach(stream => {
+                    const option = document.createElement('option');
+                    option.value = stream;
+                    option.textContent = stream;
+                    logStreamSelect.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "No log streams available";
+                option.disabled = true;
+                logStreamSelect.appendChild(option);
+            }
+        }
+    </script>
+</body>
+</html>
